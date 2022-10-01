@@ -1,0 +1,73 @@
+---
+title: "Homework 1 PSTAT 131"
+author: "Robert Miller"
+date: "2022-09-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidymodels)
+library(ISLR)
+library(ggplot2)
+library(corrplot)
+```
+
+
+
+#1
+```{r}
+#creates a histogram of highway mpg
+ph<- ggplot(data = mpg, aes(x=hwy))+geom_histogram(col="green",fill="purple")
+ph
+```
+
+#2
+```{r}
+
+#creates a linear model between city and highway mpg
+HWYvCity <- lm(mpg$cty ~mpg$hwy)
+#Scatterplot of city vs hwy mpg
+ps<- ggplot(data = mpg, aes(x=hwy,y=cty))+geom_point()+geom_smooth(method=lm)
+ps
+#r^2 is .9138 indicating a strong linear relationship, we can conclude that there is a general correlation between city and highway mpg
+summary(HWYvCity)
+
+```
+
+#3
+Dodge made the most cars and Lincoln made the least
+```{r}
+
+#Creates a barplot of the counts 
+p<- ggplot(data = mpg, aes(y=fct_infreq(manufacturer))) + geom_bar(stat="count", width = .7, col= "Red",fill ="blue" )+ labs(y= "manufacturer")
+p
+
+```
+
+#4
+there seems to be a pattern in the data, as the number of cylinders increase, the mpg on the highway decreases.
+```{r}
+
+#creates a boxplot of hwy and cyl grouped by cyl
+pb<- ggplot(mpg,aes(x=cyl,y=hwy,group=cyl))+ geom_boxplot()
+pb
+
+```
+
+#5
+positive corelation: cyl&displ,cty&hwy. 
+Negative correlation:displ&cty,displ&hwy,cyl&cty,
+cyl&hwy. 
+
+Overall there relationships make sense, the more displacement an engine has the more fuel it requires to combust making the mpg on both the city and highway lower. the negative correlation between cylinders and both city and highway mpg make sense as more cylinders often means more displacement(as shown as positive correlation). I was surprised with the slight negative correlation with year and city mpg, you would think cars would get more efficient as engine technology enhances, this could be explained that the data set shows a slight positive correlation to displacement and year.
+```{r}
+
+
+#correlation of numeric values of mpg
+M= cor(select_if(mpg,is.numeric))
+#plots the correlation of mpg
+corrplot(M,type = 'lower')
+ 
+```
